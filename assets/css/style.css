@@ -1,0 +1,73 @@
+/* Brand Theme */
+:root {
+    --plum: #320E3b;
+    --pink: #E56399;
+    --blue: #7f96ff;
+    --lblue: #A6CFD5;
+    --light: #DBFCFF;
+    
+    --header-height: 60px;
+}
+
+* {
+    font-family: Verdana, sans-serif;
+}
+
+header {
+    display: flex;
+    height: var(--header-height);
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top:0;
+    width: 100%;
+    z-index: 50;
+
+    background-color: var(--lblue);
+}
+body {
+    background-color: var(--light);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid red;
+}
+
+main {
+    margin-top:var(--header-height);
+    height: 80vh;
+    width: 75%;
+    border: 2px dotted orange;
+    display: flex;
+    justify-content: center;
+}
+
+#question-box {
+    border: 5px solid blue;
+    width: 60%;
+    height: 75%;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: column;
+}
+
+#title {
+    color: var(--plum);
+    border: 2px dashed red;
+}
+
+#question-content {
+    text-align: center;
+    border: 2px solid #7f96ff;
+    margin: 0 0 20px 0;
+}
+
+.quiz-btn {
+    background-color: var(--plum);
+    color: var(--light);
+    padding: 2px 7px;
+    border-radius: 5px;
+}
+
