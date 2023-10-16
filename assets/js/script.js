@@ -29,7 +29,7 @@ class Option {
 
 // Declare Functions
 var renderQuestion = function() {
-    if(questionCounter >= questionSet.length-1) {
+    if(questionCounter >= questionSet.length) {
         alert("quiz over!");
         return;
     }
@@ -78,14 +78,11 @@ var evaluateAnswer = function(event) {
 
         if(correctAnswer) {
             alert("correct!");
-            renderQuestion();
         } else {
             alert("WRONG");
         }
-
-
+        renderQuestion();
     } else {
-
         return;
     }
 }
