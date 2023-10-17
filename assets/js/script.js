@@ -3,13 +3,16 @@ var startBtn = document.querySelector("#quiz-start");
 var questionBox = document.querySelector("#question-box");
 var questionTitle = document.querySelector("#quiz-title");
 var questionContent = document.querySelector("#question-content");
+var timeEl = document.querySelector("#timer");
 var questionOptions;
+var questionFeedback;
 
 // Set Global Variables
 var questionSet = [];
 var optionSet = [];
 var questionCounter = 0;
 var score = 0;
+var timeLeft = 60;
 
 // Declare Classes
 class Question {
@@ -37,6 +40,7 @@ var renderQuestion = function() {
     let currentQuestion = questionSet[questionCounter];
     try {
         questionOptions.innerHTML = "";
+        questionFeedback.innerHTML = "";
     } catch (e) {
         console.log(e);
     }
@@ -64,30 +68,56 @@ var renderQuestion = function() {
     // Append OL to Content
     questionContent.appendChild(questionOptions);
 
+    // Create feedback
+    questionFeedback = document.createElement("p");
+    questionFeedback.setAttribute("id", "feedback");
+    questionBox.appendChild(questionFeedback); 
+
     questionCounter ++;
 
 }
 
 var evaluateAnswer = function(event) {
     var element = event.target;
-    // Only run function if an li element was clicked
+    // Delegate event to li elements
     if(element.matches("li")) {
         // Boolean from string value
         let correctAnswer = element.dataset.validation === "true";
 
-
         if(correctAnswer) {
-            alert("correct!");
+            score ++;
+            questionFeedback.setAttribute("style", "color: green; font-size: 20px; font-weight: bold; font-style: italic;");
+            questionFeedback.textContent = "Correct!";
+
         } else {
-            alert("WRONG");
+            questionFeedback.setAttribute("style", "color: red; font-size: 20px; font-weight: bold; font-style: italic;");
+            questionFeedback.textContent = "Incorrect!";
+            timeLeft -=10;            
         }
-        renderQuestion();
+        
+        setTimeout(renderQuestion,1000);
     } else {
         return;
     }
 }
 
-var startQuiz = function() {
+var setTime = function() {
+    var timerInterval = setInterval(function() {
+        timeLeft--;
+        if(timeLeft ===1 ) {
+            timeEl.textContent = timeLeft + " second remaining";
+        } else {
+            timeEl.textContent = timeLeft + " seconds remaining";
+        }
+
+        if(timeLeft <=0) {
+            clearInterval(timerInterval);
+            timeEl.textContent = "Times Up!";
+        }
+    },1000);
+}
+
+var init = function() {
     // ("Quiz has started!");
     // Build Quiz
     // Question 1
@@ -134,10 +164,13 @@ var startQuiz = function() {
     // questionContent.remove();
     questionContent.textContent = "";
     renderQuestion();
+    setTime();
 }
 
+
+
 // Add Event Listeners
-startBtn.addEventListener("click", startQuiz);
+startBtn.addEventListener("click", init);
 questionBox.addEventListener("click",evaluateAnswer);
 
 
