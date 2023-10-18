@@ -13,6 +13,12 @@ var optionSet = [];
 var questionCounter = 0;
 var score = 0;
 var timeLeft = 60;
+var scores = localStorage.getItem("scores");
+if (scores == null) {
+    scores = [];
+} else {
+    scores = JSON.parse(scores);
+}
 
 // Declare Classes
 class Question {
@@ -31,9 +37,45 @@ class Option {
 
 
 // Declare Functions
+var saveScore = function() {
+    let initials = document.querySelector("#initials").value;
+    console.log(score);
+    scores.push({
+        'name': initials,
+        'score': score
+    });
+    localStorage.setItem("scores", JSON.stringify(scores));
+}
+
+var renderEnd = function() {
+    questionFeedback.textContent = "";
+    questionTitle.textContent = "All Done!";
+
+    questionContent.setAttribute("style", "text-align: center");
+    questionContent.textContent = `Your Score: ${score}. Enter your initials to save:`;
+
+    // Create Input Field
+    var initialInput = document.createElement("input");
+    initialInput.setAttribute("placeholder", "Your Initials");
+    initialInput.setAttribute("type", "text");
+    initialInput.setAttribute("id", "initials");
+    initialInput.setAttribute("maxlength", 3);
+
+    questionBox.appendChild(initialInput);
+
+    var saveBtn = document.createElement("button");
+    saveBtn.textContent = "Submit";
+    saveBtn.setAttribute("class", "quiz-btn");
+
+    saveBtn.addEventListener("click", saveScore);
+    questionBox.appendChild(saveBtn);
+
+
+
+}
 var renderQuestion = function() {
     if(questionCounter >= questionSet.length) {
-        alert("quiz over!");
+        renderEnd();
         return;
     }
 
@@ -69,9 +111,12 @@ var renderQuestion = function() {
     questionContent.appendChild(questionOptions);
 
     // Create feedback
-    questionFeedback = document.createElement("p");
-    questionFeedback.setAttribute("id", "feedback");
-    questionBox.appendChild(questionFeedback); 
+    questionFeedback = document.querySelector("#feedback");
+    if(questionFeedback === null) {
+        questionFeedback = document.createElement("p");
+        questionFeedback.setAttribute("id", "feedback");
+        questionBox.appendChild(questionFeedback); 
+    }
 
     questionCounter ++;
 
@@ -113,6 +158,7 @@ var setTime = function() {
         if(timeLeft <=0) {
             clearInterval(timerInterval);
             timeEl.textContent = "Times Up!";
+            renderEnd();
         }
     },1000);
 }
