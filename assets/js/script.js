@@ -6,6 +6,8 @@ var questionContent = document.querySelector("#question-content");
 var timeEl = document.querySelector("#timer");
 var questionOptions;
 var questionFeedback;
+var scoreList;
+var timerInterval;
 
 // Set Global Variables
 var questionSet = [];
@@ -41,13 +43,19 @@ var saveScore = function() {
     let initials = document.querySelector("#initials").value;
     console.log(score);
     scores.push({
-        'name': initials,
+        'initials': initials,
         'score': score
     });
     localStorage.setItem("scores", JSON.stringify(scores));
+    let liEl = document.createElement("li");
+    liEl.textContent = `${initials}: ${score}`;
+
+    scoreList.appendChild(liEl);
 }
 
 var renderEnd = function() {
+    clearInterval(timerInterval);
+    timeEl.text = "Finished!"
     questionFeedback.textContent = "";
     questionTitle.textContent = "All Done!";
 
@@ -69,6 +77,16 @@ var renderEnd = function() {
 
     saveBtn.addEventListener("click", saveScore);
     questionBox.appendChild(saveBtn);
+
+    scoreList = document.createElement("ul");
+    for (let curScore of scores) {
+        let liEl = document.createElement("li");
+        liEl.textContent = `${curScore.initials}: ${curScore.score}`;
+        scoreList.appendChild(liEl);
+    }
+
+    questionBox.appendChild(scoreList);
+
 
 
 
@@ -147,7 +165,7 @@ var evaluateAnswer = function(event) {
 }
 
 var setTime = function() {
-    var timerInterval = setInterval(function() {
+    timerInterval = setInterval(function() {
         timeLeft--;
         if(timeLeft ===1 ) {
             timeEl.textContent = timeLeft + " second remaining";
@@ -157,7 +175,7 @@ var setTime = function() {
 
         if(timeLeft <=0) {
             clearInterval(timerInterval);
-            timeEl.textContent = "Times Up!";
+            timeEl.textContent = "Finished!";
             renderEnd();
         }
     },1000);
